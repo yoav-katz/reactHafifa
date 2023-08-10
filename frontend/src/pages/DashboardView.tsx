@@ -1,16 +1,15 @@
-import { Container, Grid, Paper, Toolbar, styled, PaperProps } from "@mui/material";
-import { FC } from "react"
+import { Container, Grid, Paper, Toolbar, styled } from "@mui/material";
 import Chart from "../components/Chart";
 import Deposits from "../components/Deposits";
 import DataTable from "../components/DataTable";
 
-const StyledPaper: FC<PaperProps> = styled(Paper)(({theme}) => ({
+const StyledPaper = styled(Paper)(({theme}) => ({
   padding: theme.spacing(2),
   display: 'flex',
   flexDirection: 'column',
 }));
 
-const StyledPaperWithHeight: FC<PaperProps> = styled(StyledPaper)({
+const StyledPaperWithHeight = styled(StyledPaper)({
   height: 240
 });
 
@@ -33,6 +32,7 @@ const createData = (
 ): Data => {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
+
 const headers = [{ name: "date", realName: "תאריך" }, { name: "name", realName: "שם" }, { name: "shipTo", realName: "כתובת יעד" }, { name: "paymentMethod", realName: "תשלום" }, { name: "amount", realName: "כמות"}];
 
 const rows = [
@@ -72,7 +72,7 @@ const rows = [
 ];
 
 
-const DashboardAppPage: FC = () => {
+const DashboardAppPage = () => {
   return (
       <>
         <Toolbar />

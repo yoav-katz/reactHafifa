@@ -1,9 +1,10 @@
-import { FC } from 'react';
 import Title from './Title';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { purchasesPerMonth } from '../data/utils';
+
 const data = purchasesPerMonth();
-const Chart: FC = () => {    
+
+const Chart = () => {    
     return (
     <>
         <Title>מכירות לפי חודש</Title>

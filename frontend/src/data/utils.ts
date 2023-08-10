@@ -26,12 +26,24 @@ const purchasesPerMonth = () => {
     return purchasesPerMonth.reverse();
 };
 
+const compareDates = (firstDate: string | Date, secondDate: string | Date) => {
+  const date1 = new Date(firstDate).getTime();
+  const date2 = new Date(secondDate).getTime();
+
+  if (date1 < date2) {
+      return -1;
+  } else if (date1 > date2) {
+      return 1;
+  } else {
+      return 0;
+  }
+};
+
 const getLastOrders = () => {
     // const lastOrders = Array(10);
-    // const sortedPurchases = purchases.sort((a, b) => )
-    // return lastOrders.map(() => {
-
-    // })
+    const sortedPurchases = purchases.slice().sort((a, b) => compareDates(a.date, b.date));
+    console.log(sortedPurchases)
 }
+
 
 export { purchasesPerMonth, getLastOrders };

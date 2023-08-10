@@ -1,6 +1,4 @@
-import { FC } from "react";
-
-const UsersView: FC = () => {
+const UsersView = () => {
   return (
     <p>   
       לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית סחטיר בלובק. תצטנפל

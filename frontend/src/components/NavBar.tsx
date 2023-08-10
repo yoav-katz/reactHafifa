@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   Drawer,
   List,
@@ -29,7 +28,7 @@ const paths: Path[] = [
   },
 ];
 
-const NavBar: FC = () => {
+const NavBar = () => {
   const { pathname } = useLocation();
 
   return (

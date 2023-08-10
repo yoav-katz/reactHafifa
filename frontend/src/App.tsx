@@ -2,7 +2,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import NavBar from './components/NavBar';
 import { Outlet } from 'react-router-dom';
-import { FC } from 'react';
 import { Stack, styled, Theme } from '@mui/material';
 
 // const darkTheme: Theme = createTheme({
@@ -30,7 +29,7 @@ const MainWithColor = styled('main')(
   }
 );
 
-const App:FC = () =>{
+const App = () =>{
   return (
     <ThemeProvider theme={lightTheme}>
       <CssBaseline />
