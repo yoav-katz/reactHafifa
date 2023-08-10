@@ -13,7 +13,7 @@ const ErrorPage = () => {
   return (
     <Stack textAlign="center" sx={{ direction: "ltr" }}>
       <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occured.</p>
+      <p>Sorry, an unexpected error has occurred.</p>
       <p>
         <i>{error.statusText || error.message}</i>
       </p>

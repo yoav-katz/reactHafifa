@@ -1,8 +1,8 @@
 import { FC } from "react";
 
-const ProductsView: FC = () => {
+const UsersView: FC = () => {
   return (
-    <p>
+    <p>   
       לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית סחטיר בלובק. תצטנפל
       בלינדו למרקל אס לכימפו, דול, צוט ומעיוט - לפתיעם ברשג - ולתיעם גדדיש.
       קוויז דומור ליאמום בלינך רוגצה. לפמעט מוסן מנת. לורם איפסום דולור סיט אמט,
@@ -32,4 +32,4 @@ const ProductsView: FC = () => {
   );
 };
 
-export default ProductsView;
+export default UsersView;

@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import DashboardView from "../pages/DashboardView";
-import ProductView from "../pages/ProductsView";
 import ErrorPage from "../pages/ErrorPage";
 import App from "../App";
+import UsersView from "../pages/UsersView";
 
 const Router = createBrowserRouter([
   {
@@ -15,8 +15,8 @@ const Router = createBrowserRouter([
         element: <DashboardView />,
       },
       {
-        path: "products",
-        element: <ProductView />,
+        path: "users",
+        element: <UsersView />,
       },
     ],
   },

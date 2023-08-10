@@ -1,52 +1,45 @@
-import { FC } from "react";
-import "./App.css";
-import NavBar from "./components/NavBar";
-import { CssBaseline, createTheme, Grid } from "@mui/material";
-import { ThemeProvider } from "@emotion/react";
-import { Outlet } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import NavBar from './components/NavBar';
+import { Outlet } from 'react-router-dom';
+import { FC } from 'react';
+import { Stack, styled, Theme } from '@mui/material';
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
-
-// const lightTheme = createTheme({
+// const darkTheme: Theme = createTheme({
 //   palette: {
-//     mode: "light",
+//     mode: "dark",
 //   },
 // });
 
-const GRID_MAX_SIZE = 12;
-const NAVBAR_SIZE = 2;
-const APP_SIZE = GRID_MAX_SIZE - NAVBAR_SIZE;
-const NAVBAR_SIZE_PRECENTAGE = (NAVBAR_SIZE / GRID_MAX_SIZE) * 100;
+const lightTheme: Theme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
 
-const App: FC = () => {
+const MainWithColor = styled('main')(
+  ({ theme }) => {
+    return {
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? theme.palette.grey[100]
+          : theme.palette.grey[900],
+      width: "100%",
+      paddingRight: theme.spacing(4)
+    }
+  }
+);
+
+const App:FC = () =>{
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <CssBaseline />
-      <Grid container display="flex">
-        <Grid
-          item
-          component="nav"
-          xs={NAVBAR_SIZE}
-          sx={{
-            width: `${NAVBAR_SIZE_PRECENTAGE}%`,
-            height: "100vh",
-            ".MuiDrawer-paper": {
-              width: `${NAVBAR_SIZE_PRECENTAGE}%`,
-            },
-          }}
-        >
-          <NavBar />
-        </Grid>
-        <Grid item xs={APP_SIZE} component="main">
-          <Outlet />
-        </Grid>
-      </Grid>
+      <Stack direction="row">
+        <nav><NavBar/></nav>
+        <MainWithColor><Outlet /></MainWithColor>
+        </Stack>
     </ThemeProvider>
   );
-};
+}
 
-export default App;
+export default App
