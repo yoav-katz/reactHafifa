@@ -1,8 +1,8 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import NavBar from './components/NavBar';
-import { Outlet } from 'react-router-dom';
-import { Stack, styled, Theme } from '@mui/material';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import NavBar from "./components/NavBar";
+import { Outlet } from "react-router-dom";
+import { Stack, styled, Theme } from "@mui/material";
 
 // const darkTheme: Theme = createTheme({
 //   palette: {
@@ -16,29 +16,31 @@ const lightTheme: Theme = createTheme({
   },
 });
 
-const MainWithColor = styled('main')(
-  ({ theme }) => {
-    return {
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[100]
-          : theme.palette.grey[900],
-      width: "100%",
-      paddingRight: theme.spacing(4)
-    }
-  }
-);
+const MainWithColor = styled("main")(({ theme }) => {
+  return {
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? theme.palette.grey[100]
+        : theme.palette.grey[900],
+    width: "100%",
+    paddingRight: theme.spacing(4),
+  };
+});
 
-const App = () =>{
+const App = () => {
   return (
     <ThemeProvider theme={lightTheme}>
       <CssBaseline />
       <Stack direction="row">
-        <nav><NavBar/></nav>
-        <MainWithColor><Outlet /></MainWithColor>
-        </Stack>
+        <nav>
+          <NavBar />
+        </nav>
+        <MainWithColor>
+          <Outlet />
+        </MainWithColor>
+      </Stack>
     </ThemeProvider>
   );
-}
+};
 
-export default App
+export default App;

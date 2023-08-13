@@ -1,7 +1,8 @@
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
+import { ReactNode } from "react";
 
 interface TitleProps {
-  children?: React.ReactNode;
+  children: ReactNode;
 }
 
 const Title = (props: TitleProps) => {

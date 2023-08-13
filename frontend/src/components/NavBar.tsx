@@ -6,38 +6,24 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Dashboard, ShoppingCart } from "@mui/icons-material";
 import { useLocation, Link } from "react-router-dom";
-
-interface Path {
-  name: string;
-  path: string;
-  icon: JSX.Element;
-}
-
-const paths: Path[] = [
-  {
-    name: "דשבורדים",
-    path: "/dashboard",
-    icon: <Dashboard />,
-  },
-  {
-    name: "לקוחות",
-    path: "/users",
-    icon: <ShoppingCart />,
-  },
-];
+import { paths } from "../router/paths";
 
 const NavBar = () => {
   const { pathname } = useLocation();
 
   return (
-    <Drawer variant="persistent" anchor="right" open={true} sx={{
-      height: "100vh",
-      '& .MuiDrawer-paper': {
-        position: 'relative',
-      }
-    }}>
+    <Drawer
+      variant="persistent"
+      anchor="right"
+      open={true}
+      sx={{
+        height: "100vh",
+        "& .MuiDrawer-paper": {
+          position: "relative",
+        },
+      }}
+    >
       <List>
         {paths.map((path) => (
           <Link to={path.path} key={path.path}>

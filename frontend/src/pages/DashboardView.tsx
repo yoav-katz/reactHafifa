@@ -1,103 +1,69 @@
-import { Container, Grid, Paper, Toolbar, styled } from "@mui/material";
-import Chart from "../components/Chart";
-import Deposits from "../components/Deposits";
-import DataTable from "../components/DataTable";
+import { Container, Grid, Paper, styled, Typography } from "@mui/material";
+import Chart from "@/components/Chart";
+import DataTable from "@/components/DataTable";
+import { getLastPurchases, getPriceOfPurchase } from "@/data/utils";
+import { JoinedPurchase } from "@/entities/Purchase";
+import Title from "@/components/Title";
 
-const StyledPaper = styled(Paper)(({theme}) => ({
+const headers = [
+  { name: "product", realName: "שם המוצר" },
+  { name: "customer", realName: "שם הלקוח" },
+  { name: "amount", realName: "כמות" },
+  { name: "toPay", realName: "תשלום" },
+  { name: "date", realName: "תאריך הזמנה" },
+];
+
+const rows = getLastPurchases().map((purchase: JoinedPurchase) => ({
+  ...purchase,
+  toPay: `${getPriceOfPurchase(purchase)}$`,
+  product: purchase.product.productName,
+  customer: purchase.customer.firstName + " " + purchase.customer.lastName,
+  date: new Date(purchase.date).toLocaleDateString(),
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'column',
+  paddingTop: theme.spacing(1),
+  display: "flex",
+  flexDirection: "column",
 }));
 
 const StyledPaperWithHeight = styled(StyledPaper)({
-  height: 240
+  height: 220,
 });
-
-interface Data {
-  id: number;
-  date: string;
-  name: string;
-  shipTo: string;
-  paymentMethod: string;
-  amount: number;
-}
-
-const createData = (
-  id: number,
-  date: string,
-  name: string,
-  shipTo: string,
-  paymentMethod: string,
-  amount: number,
-): Data => {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const headers = [{ name: "date", realName: "תאריך" }, { name: "name", realName: "שם" }, { name: "shipTo", realName: "כתובת יעד" }, { name: "paymentMethod", realName: "תשלום" }, { name: "amount", realName: "כמות"}];
-
-const rows = [
-  createData(
-    0,
-    '16 Mar, 2019',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44,
-  ),
-  createData(
-    1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99,
-  ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(
-    3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39,
-  ),
-  createData(
-    4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79,
-  ),
-];
-
 
 const DashboardAppPage = () => {
   return (
-      <>
-        <Toolbar />
-        <Container sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={9}>
-              <StyledPaperWithHeight>
-                <Chart />
-              </StyledPaperWithHeight>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <StyledPaperWithHeight>
-                <Deposits />
-              </StyledPaperWithHeight>
-            </Grid>
-            <Grid item xs={12}>
-              <StyledPaper>
-              <DataTable title="הזמנות אחרונות" headers={headers.reverse()} data={rows } />
-              </StyledPaper>
-            </Grid>
+    <>
+      <Container sx={{ mt: 4, mb: 4, overflow: "hidden" }}>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <StyledPaperWithHeight>
+              <Title>הכנסות חודשיות</Title>
+              <Chart />
+            </StyledPaperWithHeight>
           </Grid>
-        </Container>
+          <Grid item xs={3}>
+            <StyledPaperWithHeight>
+              <Title>חודש אחרון</Title>
+              <Typography component="p" variant="h4">
+                $3,024.00
+              </Typography>
+              <Typography color="text.secondary" sx={{ flex: 1 }}>
+                07.2023-08.2023
+              </Typography>
+            </StyledPaperWithHeight>
+          </Grid>
+          <Grid item xs={12}>
+            <StyledPaper>
+              <Title>הזמנות</Title>
+              <DataTable headers={headers} data={rows} />
+            </StyledPaper>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
-}
+};
 
 export default DashboardAppPage;
-
