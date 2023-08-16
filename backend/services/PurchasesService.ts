@@ -44,8 +44,6 @@ const formatDate = (date: Date): string => {
 const yearlySalesPerMonth = (today: Date): SalesPerMonth[] => {
     const months: { month: number; purchases: Purchase[] }[] = [];
 
-    console.log(today);
-
     for (let i = 1; i <= 12; i++) {
         const currMonth = (today.getMonth() + i) % 12;
         months.push({
