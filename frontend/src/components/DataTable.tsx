@@ -3,11 +3,12 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
+  TablePagination,
 } from "@mui/material";
-import { ChangeEvent, MouseEvent, useState, useMemo } from "react";
+import { ChangeEvent, MouseEvent } from "react";
 import TablePaginationActions from "./TablePagination";
 
 interface TableHeader {
@@ -18,32 +19,36 @@ interface TableHeader {
 interface DataTableProps<T extends { id: number }> {
   headers: TableHeader[];
   data: T[];
+  page: number;
+  rowsPerPage: number;
+  setRowsPerPage: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  setPage: (
+    _event: MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => void;
+  length: number;
 }
 
 const DataTable = <T extends { id: number }>({
   headers,
   data,
+  page,
+  rowsPerPage,
+  setPage,
+  setRowsPerPage,
+  length,
 }: DataTableProps<T>) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleChangePage = (
-    _event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setRowsPerPage(Number(event.target.value));
-    setPage(0);
-  };
-
   return (
     <>
-      <TableContainer sx={{ height: "340px", overflow: "auto" }}>
+      <TableContainer
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "400px", //FIXME make this not pixels and pagination at the end
+        }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -54,46 +59,38 @@ const DataTable = <T extends { id: number }>({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow key={row.id}>
-                    {headers.map(({ name }) => {
-                      return (
-                        <TableCell
-                          key={
-                            row.id + "-" + JSON.stringify(row[name as keyof T])
-                          }
-                          align="center"
-                        >
-                          {String(row[name as keyof T])}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+          <TableBody sx={{ maxHeight: "200px" }}>
+            {data.map((row) => (
+              <TableRow key={row.id}>
+                {headers.map(({ name }) => (
+                  <TableCell key={row.id + "-" + name} align="center">
+                    {String(row[name as keyof T])}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                count={length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={setPage}
+                onRowsPerPageChange={setRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        colSpan={4}
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        SelectProps={{
-          inputProps: {
-            "aria-label": "rows per page",
-          },
-          native: true,
-        }}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        ActionsComponent={TablePaginationActions}
-      />
     </>
   );
 };

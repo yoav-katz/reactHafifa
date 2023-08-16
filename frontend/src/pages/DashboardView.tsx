@@ -1,31 +1,28 @@
-import { Container, Grid, Paper, styled, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  styled,
+} from "@mui/material";
 import Chart from "@/components/Chart";
-import DataTable from "@/components/DataTable";
-import { getLastPurchases, getPriceOfPurchase } from "@/data/utils";
-import { JoinedPurchase } from "@/entities/Purchase";
 import Title from "@/components/Title";
-
-const headers = [
-  { name: "product", realName: "שם המוצר" },
-  { name: "customer", realName: "שם הלקוח" },
-  { name: "amount", realName: "כמות" },
-  { name: "toPay", realName: "תשלום" },
-  { name: "date", realName: "תאריך הזמנה" },
-];
-
-const rows = getLastPurchases().map((purchase: JoinedPurchase) => ({
-  ...purchase,
-  toPay: `${getPriceOfPurchase(purchase)}$`,
-  product: purchase.product.productName,
-  customer: purchase.customer.firstName + " " + purchase.customer.lastName,
-  date: new Date(purchase.date).toLocaleDateString(),
-}));
+import PurchasesTable from "@/components/PurchasesTable";
+import { ChartData } from "@/types/ChartData";
+import { ErrorResponse } from "@/types/ErrorResponse";
+import { useQuery } from "react-query";
+import api from "@/api";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   paddingTop: theme.spacing(1),
   display: "flex",
   flexDirection: "column",
+  color:
+    theme.palette.mode === "light"
+      ? theme.palette.grey[100]
+      : theme.palette.grey[900],
 }));
 
 const StyledPaperWithHeight = styled(StyledPaper)({
@@ -33,20 +30,37 @@ const StyledPaperWithHeight = styled(StyledPaper)({
 });
 
 const DashboardAppPage = () => {
+  const {
+    isLoading: isLoadingChartData,
+    isError: isErrorChartData,
+    error: chartDataError,
+    data: chartData,
+  } = useQuery<ChartData, ErrorResponse>("chart data", () =>
+    api.purchases().yearlySalesPerMonth(new Date())
+  );
+
   return (
     <>
-      <Container sx={{ mt: 4, mb: 4, overflow: "hidden" }}>
+      <Container sx={{ mt: 4, mb: 4, height: "calc(100vh - 8rem)" }}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
             <StyledPaperWithHeight>
               <Title>הכנסות חודשיות</Title>
-              <Chart />
+              {isLoadingChartData || chartData === undefined ? (
+                <CircularProgress />
+              ) : isErrorChartData ? (
+                <Typography color="error" variant="h4">
+                  {chartDataError?.message || "Cannot load chart data"}
+                </Typography>
+              ) : (
+                <Chart data={chartData} />
+              )}
             </StyledPaperWithHeight>
           </Grid>
           <Grid item xs={3}>
             <StyledPaperWithHeight>
               <Title>חודש אחרון</Title>
-              <Typography component="p" variant="h4">
+              <Typography color="text.primary" component="p" variant="h4">
                 $3,024.00
               </Typography>
               <Typography color="text.secondary" sx={{ flex: 1 }}>
@@ -57,7 +71,7 @@ const DashboardAppPage = () => {
           <Grid item xs={12}>
             <StyledPaper>
               <Title>הזמנות</Title>
-              <DataTable headers={headers} data={rows} />
+              <PurchasesTable></PurchasesTable>
             </StyledPaper>
           </Grid>
         </Grid>

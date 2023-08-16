@@ -50,28 +50,28 @@ const TablePaginationActions = ({
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
-        aria-label="first page"
+        aria-label="עמוד ראשון"
       >
         <LastPage />
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
-        aria-label="previous page"
+        aria-label="עמוד קודם"
       >
         <KeyboardArrowRight />
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
+        aria-label="עמוד הבא"
       >
         <KeyboardArrowLeft />
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
+        aria-label="עמוד אחרון"
       >
         <FirstPage />
       </IconButton>
