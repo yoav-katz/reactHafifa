@@ -1,18 +1,18 @@
 import DashboardView from "../pages/DashboardView";
 import UsersView from "../pages/UsersView";
-import { Dashboard, ShoppingCart } from "@mui/icons-material";
+import { Dashboard, People } from "@mui/icons-material";
 
 export const paths = [
   {
     name: "דשבורדים",
     icon: <Dashboard />,
-    path: "dashboard",
+    path: "/dashboard",
     element: <DashboardView />,
   },
   {
     name: "לקוחות",
-    icon: <ShoppingCart />,
-    path: "users",
+    icon: <People />,
+    path: "/users",
     element: <UsersView />,
   },
 ];

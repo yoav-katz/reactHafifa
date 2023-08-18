@@ -1,8 +1,8 @@
-import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NavBar from "./components/NavBar";
 import { Outlet } from "react-router-dom";
-import { Stack, styled, useTheme } from "@mui/material";
+import { Stack, styled } from "@mui/material";
+import { ColorContextProvider } from "@/hooks/useColor";
 
 const MainWithColor = styled("main")(({ theme }) => {
   return {
@@ -16,10 +16,8 @@ const MainWithColor = styled("main")(({ theme }) => {
 });
 
 const App = () => {
-  const theme = useTheme();
-  theme.palette.mode = "light";
   return (
-    <ThemeProvider theme={theme}>
+    <ColorContextProvider>
       <CssBaseline />
       <Stack direction="row">
         <nav>
@@ -29,7 +27,7 @@ const App = () => {
           <Outlet />
         </MainWithColor>
       </Stack>
-    </ThemeProvider>
+    </ColorContextProvider>
   );
 };
 

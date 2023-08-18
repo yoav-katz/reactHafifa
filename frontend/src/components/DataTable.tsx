@@ -3,7 +3,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TableRow,
   TablePagination,
@@ -46,7 +45,7 @@ const DataTable = <T extends { id: number }>({
         sx={{
           display: "flex",
           flexDirection: "column",
-          maxHeight: "400px", //FIXME make this not pixels and pagination at the end
+          maxHeight: "330px",
         }}
       >
         <Table stickyHeader aria-label="sticky table">
@@ -59,7 +58,7 @@ const DataTable = <T extends { id: number }>({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody sx={{ maxHeight: "200px" }}>
+          <TableBody>
             {data.map((row) => (
               <TableRow key={row.id}>
                 {headers.map(({ name }) => (
@@ -70,27 +69,17 @@ const DataTable = <T extends { id: number }>({
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                count={length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={setPage}
-                onRowsPerPageChange={setRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        count={length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={setPage}
+        onRowsPerPageChange={setRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
     </>
   );
 };

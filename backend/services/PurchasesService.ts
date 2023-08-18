@@ -2,88 +2,101 @@ import purchasesRepository from "../repositories/PurchasesRepository";
 import productRepository from "../repositories/ProductsRepository";
 import customerRepository from "../repositories/CustomerRepository";
 import { Purchase } from "../types/Purchase";
-
-const getAllPurchases = () => {
-    const purchases = purchasesRepository.getAllPurchases();
-
-    return purchases.map((purchase) => {
-        const customer = customerRepository.getCustomerById(purchase.customerId);
-        const product = productRepository.getProductById(purchase.productId);
-
-        return {
-            id: purchase.purchaseId,
-            product: product.productName,
-            customer: customer.firstName + " " + customer.lastName,
-            amount: purchase.amount,
-            date: purchase.date,
-            price: purchase.amount * product.price
-        };
-    });
-};
-
-const getPurchasesPagination = (page: number, limit: number) => {
-    const purchases = getAllPurchases();
-
-    return purchases.slice(page * limit, page * limit + limit);
+interface PurchasesWithDetails {
+  id: number;
+  product: string;
+  customer: string;
+  amount: number;
+  date: string;
+  price: number;
 }
 
+const getPurchaseDetails = (purchase: Purchase): PurchasesWithDetails => {
+  const customer = customerRepository.getCustomerById(purchase.customerId);
+  const product = productRepository.getProductById(purchase.productId);
+
+  return {
+    id: purchase.purchaseId,
+    product: product.productName,
+    customer: `${customer.firstName} ${customer.lastName}`,
+    amount: purchase.amount,
+    date: purchase.date,
+    price: purchase.amount * product.price,
+  };
+};
+
+const getAllPurchases = (): PurchasesWithDetails[] => {
+  const purchases = purchasesRepository.getAllPurchases();
+  return purchases.map(getPurchaseDetails);
+};
+
+const getPurchasesPagination = (
+  page: number,
+  limit: number
+): PurchasesWithDetails[] => {
+  const purchases = getAllPurchases();
+  const startIndex = page * limit;
+  return purchases.slice(startIndex, startIndex + limit);
+};
+
 interface SalesPerMonth {
-    month: string;
-    sales: number;
+  month: string;
+  sales: number;
 }
 
 const formatDate = (date: Date): string => {
-    const month = date.getMonth() + 1;
+  return [
+    (date.getMonth() + 1).toString().padStart(2, "0"),
+    date.getFullYear().toString().substring(2, 4),
+  ].join("/");
+};
 
-    return [
-        (month > 9 ? "" : "0") + month,
-        date.getFullYear().toString().substring(2, 4),
-    ].join("/");
+const salesPerMonth = (month: Date): SalesPerMonth => {
+  const purchases = purchasesRepository.getAllPurchases();
+  const salesForMonth = purchases
+    .filter(({ date: purchaseDate }) => {
+      const date = new Date(purchaseDate);
+      return (
+        date.getMonth() === month.getMonth() &&
+        date.getFullYear() === month.getFullYear()
+      );
+    })
+    .reduce(
+      (sum, purchase) =>
+        sum +
+        purchase.amount *
+          productRepository.getProductById(purchase.productId).price,
+      0
+    );
+
+  return {
+    month: formatDate(month),
+    sales: salesForMonth,
+  };
 };
 
 const yearlySalesPerMonth = (today: Date): SalesPerMonth[] => {
-    const months: { month: number; purchases: Purchase[] }[] = [];
+  const purchasesPerMonth: SalesPerMonth[] = [];
 
-    for (let i = 1; i <= 12; i++) {
-        const currMonth = (today.getMonth() + i) % 12;
-        months.push({
-            month: currMonth,
-            purchases: purchasesRepository.getAllPurchases().filter(({ date: purchaseDate }) => {
-                const date = new Date(purchaseDate);
+  for (let i = 1; i <= 12; i++) {
+    const currMonthNumber = (today.getMonth() + i) % 12;
+    const currMonth = new Date();
+    currMonth.setMonth(currMonthNumber);
+    currMonth.setFullYear(
+      today.getMonth() >= currMonthNumber
+        ? today.getFullYear()
+        : today.getFullYear() - 1
+    );
 
-                return date.getMonth() === currMonth;
-            }),
-        });
-    }
+    purchasesPerMonth.push(salesPerMonth(currMonth));
+  }
 
-    const purchasesPerMonth: SalesPerMonth[] = [];
-
-    months.forEach(({ month: currMonthNumber, purchases }) => {
-        const currMonth = new Date();
-        currMonth.setMonth(currMonthNumber);
-        currMonth.setFullYear(
-            today.getMonth() >= currMonthNumber
-                ? today.getFullYear()
-                : today.getFullYear() - 1
-        );
-
-        purchasesPerMonth.push({
-            month: formatDate(currMonth),
-            sales: purchases.filter(({ date: purchaseDate }) => {
-                const date = new Date(purchaseDate);
-
-                return today.getMonth() >= date.getMonth()
-                    ? today.getFullYear() === date.getFullYear()
-                    : today.getFullYear() - 1 === date.getFullYear();
-            }).reduce((sum, purchase) => sum + purchase.amount * productRepository.getProductById(purchase.productId).price, 0),
-        });
-    });
-
-    return purchasesPerMonth;
+  return purchasesPerMonth;
 };
 
 export default {
-    getAllPurchases,
-    yearlySalesPerMonth,
-    getPurchasesPagination
+  getAllPurchases,
+  yearlySalesPerMonth,
+  getPurchasesPagination,
+  salesPerMonth,
 };
